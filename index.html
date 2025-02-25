@@ -66,7 +66,7 @@
 </head>
 
 <body>
-<h1>GA4 Event & Conversion Tracking</h1>
+<h1>GA4 Advanced Event Tracking</h1>
     <p>Click buttons below to test different Google Analytics events.</p>
 
     <!-- Button Click Event -->
@@ -79,11 +79,28 @@
         <button type="submit">Register</button>
     </form>
 
-    <!-- Add to Cart -->
+    <!-- Add to Cart & Remove from Cart -->
     <button onclick="trackAddToCart()">Add to Cart</button>
+    <button onclick="trackRemoveFromCart()">Remove from Cart</button>
 
     <!-- Purchase Event -->
     <button onclick="trackPurchase()">Complete Purchase</button>
+
+    <!-- Video (YouTube Embed) -->
+    <h3>Watch this Video:</h3>
+    <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+
+    <!-- Outbound Link -->
+    <h3>Visit an External Site:</h3>
+    <a href="https://example.com" target="_blank" onclick="trackOutboundLink()">Go to Example</a>
+
+    <!-- File Download -->
+    <h3>Download File:</h3>
+    <a href="sample.pdf" download onclick="trackFileDownload()">Download PDF</a>
+
+    <!-- Live Chat Button -->
+    <h3>Live Chat:</h3>
+    <button onclick="trackLiveChat()">Start Chat</button>
 
     <script>
         // Track Button Click
@@ -99,9 +116,8 @@
         // Track Form Submission (Registration)
         function trackFormSubmission(event) {
             event.preventDefault(); // Prevent actual form submission
-            
             let email = document.getElementById('email').value;
-            
+
             gtag('event', 'registration', {
                 'event_category': 'User Signup',
                 'event_label': 'Form Submission',
@@ -124,6 +140,18 @@
             alert('Add to Cart Event Sent!');
         }
 
+        // Track Remove from Cart
+        function trackRemoveFromCart() {
+            gtag('event', 'remove_from_cart', {
+                'event_category': 'Ecommerce',
+                'event_label': 'Remove Product',
+                'value': 1,
+                'currency': 'USD',
+                'items': [{ id: 'P123', name: 'Sample Product', price: 50 }]
+            });
+            alert('Remove from Cart Event Sent!');
+        }
+
         // Track Purchase (Conversion Event)
         function trackPurchase() {
             gtag('event', 'purchase', {
@@ -136,7 +164,70 @@
             });
             alert('Purchase Event (Conversion) Sent!');
         }
+
+        // Track Outbound Link Clicks
+        function trackOutboundLink() {
+            gtag('event', 'outbound_click', {
+                'event_category': 'Navigation',
+                'event_label': 'External Link Clicked',
+                'destination': 'https://example.com'
+            });
+            alert('Outbound Link Click Event Sent!');
+        }
+
+        // Track File Download
+        function trackFileDownload() {
+            gtag('event', 'file_download', {
+                'event_category': 'Downloads',
+                'event_label': 'Sample PDF Downloaded',
+                'file_name': 'sample.pdf'
+            });
+            alert('File Download Event Sent!');
+        }
+
+        // Track Live Chat Interaction
+        function trackLiveChat() {
+            gtag('event', 'live_chat_start', {
+                'event_category': 'User Support',
+                'event_label': 'Chat Initiated'
+            });
+            alert('Live Chat Event Sent!');
+        }
+
+        // Track Scroll Depth
+        window.addEventListener('scroll', function() {
+            let scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
+            if (scrollPercent > 50) {
+                gtag('event', 'scroll', {
+                    'event_category': 'User Engagement',
+                    'event_label': 'Scrolled 50% of the page'
+                });
+            }
+            if (scrollPercent > 90) {
+                gtag('event', 'scroll', {
+                    'event_category': 'User Engagement',
+                    'event_label': 'Scrolled 90% of the page'
+                });
+            }
+        });
+
+        // Track Video Engagement
+        function trackVideoEvent(action) {
+            gtag('event', 'video_' + action, {
+                'event_category': 'Video Engagement',
+                'event_label': 'YouTube Video'
+            });
+            alert('Video ' + action + ' Event Sent!');
+        }
+
+        // Detect video play, pause, and complete
+        let video = document.getElementById("video");
+        video.addEventListener("play", function() { trackVideoEvent("play"); });
+        video.addEventListener("pause", function() { trackVideoEvent("pause"); });
+        video.addEventListener("ended", function() { trackVideoEvent("complete"); });
+
     </script>
+
 
 </body>
 </html>
